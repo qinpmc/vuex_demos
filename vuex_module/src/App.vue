@@ -4,11 +4,12 @@
      <h3>{{aliasName}}</h3>
      <h3>{{countFullName}}</h3>
      <button @click="modifyNameAction">修改名字</button>
+
   </div>
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState, mapActions,mapMutations} from 'vuex';
 
 /*
       export default {
@@ -39,6 +40,7 @@ import {mapState, mapActions} from 'vuex';
             ...mapState(['name'])
         },*/
 
+        /*
         computed: mapState({
           // 箭头函数可使代码更简练
           name: state => state.name,
@@ -51,12 +53,27 @@ import {mapState, mapActions} from 'vuex';
             return state.name +" " +this.localName
           }
         }),
+        */
+        computed: {
+            ...mapState({
+                // 
+                name: state => state.moduleA.text,
 
+                //  
+                aliasName: state => state.moduleB.text,
+
+                // 为了能够使用 `this` 获取局部状态，必须使用常规函数
+                countFullName (state) {
+                  return state.name +" " +this.localName
+                }
+            }),
+        },
         methods: {
             ...mapActions(['modifyName']),
-
+            ...mapMutations(['setText']),
             modifyNameAction() {
-                this.modifyName('bighone');
+                //this.modifyName('bighone');
+                 this.setText();
             }
         },
     }
