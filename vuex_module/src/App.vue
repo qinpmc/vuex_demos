@@ -1,16 +1,66 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <!-- -->
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+     <h3>{{name}}</h3>
+     <h3>{{aliasName}}</h3>
+     <h3>{{countFullName}}</h3>
+     <button @click="modifyNameAction">修改名字</button>
   </div>
 </template>
 
 <script>
-  
+import {mapState, mapActions} from 'vuex';
+
+/*
+      export default {
+        data() {
+            return {
+                name: 'Lucy'
+            }
+        },
+
+        methods: {
+            modifyNameAction() {
+                this.name = "bighone"
+            }
+        }
+    }
+*/
+    export default {
+
+        data:function(){
+          return {
+            localName:"local Big"
+          }
+        },
+        //映射的计算属性的名称与 state 的子节点名称相同时，我们也可以给 mapState 传一个字符串数组
+        /*
+        computed: {
+          // 映射 this.name 为 store.state.name
+            ...mapState(['name'])
+        },*/
+
+        computed: mapState({
+          // 箭头函数可使代码更简练
+          name: state => state.name,
+
+          // 传字符串参数 'name' 等同于 `state => state.name`
+          aliasName: 'name',
+
+          // 为了能够使用 `this` 获取局部状态，必须使用常规函数
+          countFullName (state) {
+            return state.name +" " +this.localName
+          }
+        }),
+
+        methods: {
+            ...mapActions(['modifyName']),
+
+            modifyNameAction() {
+                this.modifyName('bighone');
+            }
+        },
+    }
+
 </script>
 
 
