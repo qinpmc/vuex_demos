@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <script>
+        const app = new Vue({
+            el: "#app"
+        });
+
+        const store = new Vuex.Store({
+            state: {
+                count: 0
+            },
+            mutations: {
+                increment(state) {
+                    state.count++
+                }
+            }
+        });
+        store.commit('increment')
+
+        console.log(store.state.count) 
+    </script>
+</body>
+
+</html>
