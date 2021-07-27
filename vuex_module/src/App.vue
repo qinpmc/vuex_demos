@@ -2,6 +2,7 @@
   <div id="app">
      <h3>{{name}}</h3>
      <h3>{{aliasName}}</h3>
+     <h3>{{nameDetail}}</h3>
      <h3>{{countFullName}}</h3>
      <button @click="modifyNameAction">修改名字</button>
 
@@ -9,7 +10,7 @@
 </template>
 
 <script>
-import {mapState, mapActions,mapMutations} from 'vuex';
+import {mapState, mapActions,mapMutations,mapGetters} from 'vuex';
 
 /*
       export default {
@@ -67,13 +68,18 @@ import {mapState, mapActions,mapMutations} from 'vuex';
                   return state.name +" " +this.localName
                 }
             }),
+            ...mapGetters({
+                nameDetail: 'detail'
+            }),
         },
         methods: {
             ...mapActions(['modifyName']),
+            ...mapActions(['callAction']),
             ...mapMutations(['setText']),
             modifyNameAction() {
                 //this.modifyName('bighone');
-                 this.setText();
+                //this.setText();
+                 this.callAction();
             }
         },
     }
