@@ -69,12 +69,18 @@ import {mapState, mapActions,mapMutations,mapGetters} from 'vuex';
                 }
             }),
             ...mapGetters({
-                nameDetail: 'detail'
+                //nameDetail: 'detail'
+                nameDetail: 'moduleA/detail'
             }),
         },
         methods: {
             ...mapActions(['modifyName']),
-            ...mapActions(['callAction']),
+
+            //...mapActions(['callAction']),
+
+            ...mapActions({
+                callAction:"moduleA/callAction"
+            }),
             ...mapMutations(['setText']),
             modifyNameAction() {
                 //this.modifyName('bighone');
