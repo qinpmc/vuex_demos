@@ -15,7 +15,7 @@ vuex中，有默认的五种基本的对象：
 - modules：store的子模块，为了开发大型项目，方便状态管理而使用的。 
 
 
-1. 模块内部的 state 是局部的，只属于模块本身所有，所以外部必须通过对应的模块名进行访问
+1. 模块内部的 state 是**局部**的，只属于模块本身所有，所以外部必须通过对应的模块名进行访问
 
 ```
 // moduleA.js
@@ -96,11 +96,7 @@ mutations: {
 
 ```
 
-
-
-
-
-
+ 
 
 
 ## State
@@ -276,6 +272,41 @@ mutation 非常类似于事件：每个 mutation 都有一个字符串的 事件
 
 
 
+### 提交载荷（Payload）
+
+- 提交普通参数
+
+```
+// ...
+mutations: {
+  increment (state, n) {
+    state.count += n
+  }
+}
+
+store.commit('increment', 10)
+```
+
+
+
+- 提交对象参数
+
+```
+// ...
+mutations: {
+  increment (state, payload) {
+    state.count += payload.amount
+  }
+}
+store.commit('increment', {
+  amount: 10
+})
+```
+
+
+
+
+
 ### Mutation 必须是同步函数
 
 
@@ -305,7 +336,100 @@ export default {
 ```
 
 
+## Action
+ 
+Action 类似于 mutation，不同在于：
 
+- Action **提交的是 mutation**，而不是直接变更状态。
+- Action 可以包含任意**异步**操作。
+
+
+
+
+```
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    }
+  },
+
+  //同上
+  actions: {
+    increment ({ commit }) {
+      commit('increment')
+    }
+  }
+
+
+})
+
+```
+
+### 分发 Action
+ 
+Action 函数接受一个与 store 实例具有相同方法和属性的 **context 对象**，
+- 可以调用 context.commit 提交一个 mutation，
+- 通过 context.state 和 context.getters 来获取 state 和 getters。
+
+
+Action 通过 **store.dispatch** 方法触发：
+
+```
+store.dispatch('increment')
+
+
+
+// 以载荷形式分发
+store.dispatch('incrementAsync', {
+  amount: 10
+})
+
+
+// 以对象形式分发
+store.dispatch({
+  type: 'incrementAsync',
+  amount: 10
+})
+```
+
+
+### 在组件中分发 Action
+
+
+```
+import { mapActions } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    //数组形式
+    ...mapActions([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+
+      // `mapActions` 也支持载荷：
+      'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+    ]),
+
+    //对象形式
+    ...mapActions({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+    })
+  }
+}
+
+```
+
+
+ 
 
 
 ## actions 和 mutations 区别
@@ -319,10 +443,40 @@ vuex 真正限制你的只有 mutation 必须是同步的这一点（在 redux �
 如果你开着 devtool 调用一个异步的 action，你可以清楚地看到它所调用的 mutation 是何时被记录下来的，并且可以立刻查看它们对应的状态。         
 其实我有个点子一直没时间做，那就是把记录下来的 mutations 做成类似 rx-marble 那样的时间线图，对于理解应用的异步状态变化很有帮助。  
 
+ 
 
-vscode的帮助：
-ctrl+shift+p
+## Module
 
+
+Vuex 允许将 store 分割成模块（module）。每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块
+
+
+
+```
+const moduleA = {
+  state: { ... },
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
+}
+
+const moduleB = {
+  state: { ... },
+  mutations: { ... },
+  actions: { ... }
+}
+
+const store = new Vuex.Store({
+  modules: {
+    a: moduleA,
+    b: moduleB
+  }
+})
+
+store.state.a // -> moduleA 的状态
+store.state.b // -> moduleB 的状态
+
+```
 
 
 
