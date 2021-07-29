@@ -49,7 +49,13 @@ export default new Vuex.Store({
 const moduleA = {
 	state,
 	mutations,
-	actions
+	actions,
+	getters : {
+		evenOrOdd(state, getters, rootState) {
+			console.log("getters")
+			return state.count%2 ===0 ? "even" :"odd"
+		}
+  }
 }
 
 export default new Vuex.Store({
